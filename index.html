@@ -3,11 +3,14 @@
 <head>
 <link rel="stylesheet" href="farbtastic.css" type="text/css" />
 </head>
-<body>
+<body style="margin:0">
 	<div style="font-family: sans-serif; width:200px; height:200px; position:absolute; left:50%; top:50%; margin:-100px 0 0 -150px; text-align:center;">
 		Hello. Click a colour to change it on everyone else's screen
 
 		<div id="colorpicker"></div>
+
+	</div>
+	<div id="leftBar" style="position:absolute; float:left; background:#ccc; height:100%; width:30px;"></div>
 
 		<script src="http://cdn.socket.io/socket.io-1.3.4.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -18,15 +21,19 @@
 		    $('#colorpicker').farbtastic(function() {
 		    	socket.emit('send colour', $.farbtastic('#colorpicker').color);
 		    	$('body').css("background-color", $.farbtastic('#colorpicker').color);
+		    	addLine($.farbtastic('#colorpicker').color);
 		    });
 
 		    // Listen for incoming colours.
 		    socket.on('update colour', function(colour){
 		      console.log('new colour: ' + colour);
 		      $('body').css("background-color", colour);
+		      addLine(colour);
 		    });
 		 });
+		 function addLine(colour) {
+		 	$('#leftBar').append('<div style="height:1px;width=100%;background-color:'+colour+'"></div>');
+		 }
 		</script>
-	</div>
 </body>
 </html>
