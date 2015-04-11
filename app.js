@@ -7,16 +7,17 @@ app.get('/', function(req, res){
   res.sendfile('index.html');
 });
 
-var messages = [];
+app.get('/:doc', function(req, res) {
+	res.sendfile(req.params.doc);
+});
 
 io.on('connection', function(socket){
   console.log('a user connected');
 
 
-  socket.on('add chat', function(msg){
-  	messages.push(msg);
-    console.log('message: ', msg);
-    socket.broadcast.emit('chat message', msg);
+  socket.on('send colour', function(colour){
+    console.log('new colour: ', colour);
+    socket.broadcast.emit('update colour', colour);
   });
 
 
