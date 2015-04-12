@@ -7,7 +7,11 @@
 	<div style="font-family: sans-serif; width:200px; height:200px; position:absolute; left:50%; top:50%; margin:-100px 0 0 -150px; text-align:center;">
 		Hello. Click a colour to change it on everyone else's screen
 
+		<div><button type="button" id="shuffleButton">Shuffle</button></div>
+
 		<div id="colorpicker"></div>
+
+		<div><a href="http://danielthepope.github.com">GitHub</a></div>
 
 	</div>
 	<div id="leftBar" style="position:absolute; float:left; background:#ccc; height:100%; width:30px;"></div>
@@ -24,16 +28,30 @@
 		    	addLine($.farbtastic('#colorpicker').color);
 		    });
 
+		    $.farbtastic('#colorpicker').setColor(getRandomColor());
+
 		    // Listen for incoming colours.
 		    socket.on('update colour', function(colour){
 		      console.log('new colour: ' + colour);
 		      $('body').css("background-color", colour);
 		      addLine(colour);
 		    });
+
+		    $('#shuffleButton').on('click', function() {
+		    	$.farbtastic('#colorpicker').setColor(getRandomColor());
+		    })
 		 });
 		 function addLine(colour) {
 		 	$('#leftBar').append('<div style="height:1px;width=100%;background-color:'+colour+'"></div>');
 		 }
+		 function getRandomColor() {
+		    var letters = '0123456789ABCDEF'.split('');
+		    var color = '#';
+		    for (var i = 0; i < 6; i++ ) {
+		        color += letters[Math.floor(Math.random() * 16)];
+		    }
+    	return color;
+		}
 		</script>
 </body>
 </html>
