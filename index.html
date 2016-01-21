@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-</head>
-<body style="margin:0;font-family:sans-serif;">
-	<div style="float:right;">Made by <a href="https://twitter.com/danielthepope">danielthepope</a> as part of <a href="http://jsoxford.com">JSOxford's</a> <a href="http://www.meetup.com/JSOxford/events/221085527/">Realtime hack</a>. <a href="https://github.com/danielthepope/socket-colours">GitHub</a></div>
-	<div style="width:200px; height:200px; position:absolute; left:50%; top:50%; margin:-100px 0 0 -150px; text-align:center;">
-		Hello. Click the button to change the background colour on everyone else's screen.
-
-		<div style="margin-top:15px;"><button style="height:40px;width:100px;" type="button" id="shuffleButton">Shuffle</button></div>
-
-	</div>
-	<div id="leftBar" style="position:absolute; float:left; background:#ccc; height:100%; width:30px;"></div>
-
-		<script src="http://cdn.socket.io/socket.io-1.3.4.js"></script>
-		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-		<script>
-		 $(document).ready(function() {
-		    var socket = io();
-		    // Listen for incoming colours.
-		    socket.on('update colour', function(colour){
-		      console.log('new colour: ' + colour);
-		      $('body').css('background-color', colour);
-		      addLine(colour);
-		    });
-
-		    $('#shuffleButton').on('click', function() {
-		    	var colour = getRandomColour();
-		    	socket.emit('send colour', colour);
-		    	$('body').css('background-color', colour);
-		    	addLine(colour);
-		    }).trigger('click');
-		 });
-		 function addLine(colour) {
-		 	$('#leftBar').append('<div style="height:1px;width=100%;background-color:'+colour+'"></div>');
-		 }
-		 function getRandomColour() {
-		    var letters = '0123456789ABCDEF'.split('');
-		    var colour = '#';
-		    for (var i = 0; i < 6; i++ ) {
-		        colour += letters[Math.floor(Math.random() * 16)];
-		    }
-    	return colour;
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			font-family:sans-serif;
 		}
-		</script>
+		#clickything {
+			width:100%;
+			min-height:100%;
+			background-color:#ffffff;
+		}
+		#footer {
+			position:absolute;
+			bottom:0;
+		}
+	</style>
+</head>
+<body>
+	<div id="clickything" onclick="sendRandomColour()"></div>
+	<div id="footer">
+		<p>Click to change the background colour of everyone connected.</p>
+		<p>Made by <a href="https://twitter.com/danielthepope">danielthepope</a> as part of <a href="http://jsoxford.com">JSOxford's</a> <a href="http://www.meetup.com/JSOxford/events/221085527/">Realtime hack</a>. <a href="https://github.com/danielthepope/socket-colours">GitHub</a></p></div>
+
+	<script src="http://cdn.socket.io/socket.io-1.3.4.js"></script>
+	<script>
+		var socket = io();
+		socket.on('update colour', function(colour){
+			console.log('new colour: ' + colour);
+			document.getElementById('clickything').setAttribute('style', 'background-color:'+colour);
+		});
+		
+		function sendRandomColour() {
+			var colour = getRandomColour();
+			socket.emit('send colour', colour);
+			document.getElementById('clickything').setAttribute('style', 'background-color:'+colour);
+		}
+		
+		function getRandomColour() {
+			var letters = '0123456789ABCDEF'.split('');
+			var colour = '#';
+			for (var i = 0; i < 6; i++ ) {
+				colour += letters[Math.floor(Math.random() * 16)];
+			}
+			return colour;
+		}
+	</script>
 </body>
 </html>
