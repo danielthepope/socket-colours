@@ -51,5 +51,15 @@
 			return colour;
 		}
 	</script>
+
+<script src="https://js.pusher.com/3.0/pusher.min.js"></script>
+<script>
+var pusher = new Pusher('087e104eb546157304a9', {cluster:'eu'})
+var button = pusher.subscribe('button')
+
+button.bind('press', function(data) {
+  sendRandomColour();
+})
+</script>
 </body>
 </html>
